@@ -3,7 +3,6 @@ import matplotlib.pyplot as plt
 import matplotlib.animation as animation
 import datetime as dt
 
-import time
 from bme280 import BME280
 
 try:
@@ -20,11 +19,8 @@ bus = SMBus(1)
 bme280 = BME280(i2c_dev=bus)
 
 def animate(i, xs, ys):
-    temperature = bme280.get_temperature()
-    temperature = (temperature * 1.8) + 32
     pressure = bme280.get_pressure()
-    humidity = bme280.get_humidity()
-    xs.append(dt.datetime.now().strftime('%H:%M:%S.%f'))
+    xs.append(dt.datetime.now().strftime('%H:%M:%S'))
     ys.append(pressure)
     xs = xs[-20:]
     ys = ys[-20:]
@@ -32,10 +28,10 @@ def animate(i, xs, ys):
     ax.plot(xs, ys)
     plt.xticks(rotation=45, ha='right')
     plt.subplots_adjust(bottom=0.30)
-    plt.title('pressure over time')
+    plt.title('Pressure over time')
     plt.ylabel("pressure")
     
-ani = animation.FuncAnimation(fig, animate, fargs=(xs, ys), interval=1000)
+ani = animation.FuncAnimation(fig, animate, fargs=(xs, ys), interval=60000)
 plt.show()
 
 
