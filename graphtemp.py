@@ -3,7 +3,6 @@ import matplotlib.pyplot as plt
 import matplotlib.animation as animation
 import datetime as dt
 
-import time
 from bme280 import BME280
 
 try:
@@ -22,22 +21,20 @@ bme280 = BME280(i2c_dev=bus)
 def animate(i, xs, ys):
     temperature = bme280.get_temperature()
     temperature = (temperature * 1.8) + 32
-    pressure = bme280.get_pressure()
-    humidity = bme280.get_humidity()
     plt.style.use('seaborn-notebook')
-    xs.append(dt.datetime.now().strftime('%H:%M:%S.%f'))
+    xs.append(dt.datetime.now().strftime('%H:%M:%S'))
     ys.append(temperature)
     xs = xs[-20:]
     ys = ys[-20:]
     ax.clear()
     ax.plot(xs, ys)
-    fig.suptitle('Timmy temperature')
+    fig.suptitle('Fahrenheit Temperature')
     plt.xticks(rotation=45, ha='right')
     plt.subplots_adjust(bottom=0.30)
-    plt.title('temp over time')
-    plt.ylabel("temp deg f")
+    plt.title('Temperature per minute')
+    plt.ylabel("Temperature in degrees F*")
     
-ani = animation.FuncAnimation(fig, animate, fargs=(xs, ys), interval=1000)
+ani = animation.FuncAnimation(fig, animate, fargs=(xs, ys), interval=60000)
 plt.show()
 
 
